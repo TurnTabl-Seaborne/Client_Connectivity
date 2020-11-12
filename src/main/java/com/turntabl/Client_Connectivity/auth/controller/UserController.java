@@ -22,7 +22,7 @@ public class UserController {
         return repository.findAll();
     }
 
-    @PostMapping("/users")
+    @PostMapping("/api/signup")
     User newUser(@RequestBody User newUser){
         return repository.save(newUser);
     }
