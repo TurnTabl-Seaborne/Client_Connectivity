@@ -61,10 +61,16 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
+                "\nname=" + name +
+                "\nemail=" + email +
                 '}';
     }
+
+    public String returnNameToString() {
+        return this.name;
+    }
+
+
 }

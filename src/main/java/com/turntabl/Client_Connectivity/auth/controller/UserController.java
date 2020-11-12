@@ -1,9 +1,14 @@
 package com.turntabl.Client_Connectivity.auth.controller;
 
+import com.turntabl.Client_Connectivity.auth.exception.UserNotFoundAdvice;
 import com.turntabl.Client_Connectivity.auth.exception.UserNotFoundException;
 import com.turntabl.Client_Connectivity.auth.model.User;
 import com.turntabl.Client_Connectivity.auth.repository.UserRepository;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -29,15 +34,17 @@ public class UserController implements UserDetailsService {
         return repository.findAll();
     }
 
+    @ResponseBody
     @PostMapping("/api/signup")
-    User newUser(@RequestBody User newUser){
-        return repository.save(newUser);
+    ResponseEntity<String>  newUser(@RequestBody User newUser){
+        Boolean exists = repository.findByEmail(newUser.getEmail()).map(userObj -> (userObj.getEmail().matches(newUser.getEmail())) ? true:false).orElse(false);
+        return (exists) ? new ResponseEntity<>("user already exists", HttpStatus.FOUND): new ResponseEntity<>(repository.save(newUser).returnNameToString(), HttpStatus.CREATED);
     }
 
     @PostMapping("/api/signin")
-    String my_user(@RequestBody User user) {
-       // User my_user = (User) loadUserByUsername(user.getEmail());
-        return "user";
+    ResponseEntity<String> my_user(@RequestBody User user) {
+        Boolean success_login = repository.findByEmail(user.getEmail()).map(userObj -> (userObj.getPassword().matches(user.getPassword())) ? true:false).orElse(false);
+        return (success_login) ? new ResponseEntity<>("success", HttpStatus.ACCEPTED) : new ResponseEntity<>("error", HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("/api/users/{id}")
