@@ -4,22 +4,29 @@ package com.turntabl.Client_Connectivity.auth.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "\"User\"")
 public class User {
 
     private @Id @GeneratedValue Long id;
     private String name;
     private String email;
     private String password;
-    private String role;
 
     public User() {
     }
 
-    public User(String name, String email) {
+    public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
+        this.password = password;
+    }
+
+    public User(String email, String password) {
+        this.email = email;
+        this.password = password;
     }
 
     public Long getId(){
@@ -46,14 +53,6 @@ public class User {
 
     public String getPassword() {
         return password;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public String getRole() {
-        return role;
     }
 
     public void setPassword(String password) {
