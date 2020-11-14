@@ -1,33 +1,48 @@
 package com.turntabl.Client_Connectivity.auth.model;
 
-
+//importing necessary libraries
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+
+
 @Entity
 @Table(name = "\"User\"")
 public class User {
 
+    //user class attributes
     private @Id @GeneratedValue Long id;
     private String name;
     private String email;
     private String password;
 
+
+    //user constructor
     public User() {
     }
 
+
+    //user constructor which takes user name, email and password.
     public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
     }
 
+    //user constructor which takes user email and password.
     public User(String email, String password) {
         this.email = email;
         this.password = password;
     }
+
+
+    /***
+     * Getters and Setters
+     * @return
+     */
+
 
     public Long getId(){
         return  this.id;
@@ -59,6 +74,11 @@ public class User {
         this.password = password;
     }
 
+
+    /**
+     * Methods
+     * @return
+     */
     @Override
     public String toString() {
         return "{" +
@@ -67,10 +87,5 @@ public class User {
                 "\nemail=" + email +
                 '}';
     }
-
-    public String returnNameToString() {
-        return this.name;
-    }
-
 
 }

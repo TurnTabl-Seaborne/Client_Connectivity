@@ -9,6 +9,7 @@ public class Response {
     public Response(){
     }
 
+
     public String getStatus() {
         return status;
     }
