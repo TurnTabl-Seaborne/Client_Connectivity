@@ -22,6 +22,7 @@ import java.util.Optional;
 
 
 //RestController annotation applies to mark UserController class as a request handler.
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 public class UserController implements UserDetailsService {
 
@@ -43,7 +44,6 @@ public class UserController implements UserDetailsService {
 
 
    //get all users endpoint
-    @CrossOrigin
     @GetMapping("/api/users")
     List<User> allUsers(){
         return repository.findAll();
@@ -54,7 +54,6 @@ public class UserController implements UserDetailsService {
 
 
     //sign up endpoint
-    @CrossOrigin
     @PostMapping("/api/signup")
     //function that takes user object and returns response of type Response.
     Response newUser(@RequestBody User newUser){
@@ -102,7 +101,6 @@ public class UserController implements UserDetailsService {
 
 
     //sign in endpoint
-    @CrossOrigin
     @PostMapping("/api/signin")
     //function that takes User and returns response of type Response.
     Response my_user(@RequestBody User user) {
@@ -176,7 +174,6 @@ public class UserController implements UserDetailsService {
 
 
     //endpoint for getting user by ID.
-    @CrossOrigin
     @GetMapping("/api/users/{id}")
     //function that takes user ID of type long and returns User
     User oneUser(@PathVariable Long id){
@@ -190,7 +187,6 @@ public class UserController implements UserDetailsService {
 
 
     //endpoint for updating user details
-    @CrossOrigin
     @PutMapping("/api/users/{id}")
     //function that takes User and ID and returns user details.
     User updateUser(@RequestBody User newUser, @PathVariable Long id){
@@ -208,7 +204,6 @@ public class UserController implements UserDetailsService {
 
 
     //delete user endpoint.
-    @CrossOrigin
     @DeleteMapping("/api/users/{id}")
     //function that takes ID of type long and deletes user.
     void deleteUSer(@PathVariable Long id){
