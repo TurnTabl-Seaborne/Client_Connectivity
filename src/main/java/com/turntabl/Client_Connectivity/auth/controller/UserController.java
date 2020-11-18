@@ -22,7 +22,6 @@ import java.util.Optional;
 
 
 //RestController annotation applies to mark UserController class as a request handler.
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 public class UserController implements UserDetailsService {
 
