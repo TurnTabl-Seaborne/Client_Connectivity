@@ -1,11 +1,11 @@
 package com.turntabl.Client_Connectivity.auth.model;
 
 //importing necessary libraries
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.turntabl.Client_Connectivity.portfolio.model.Portfolio;
 
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -17,18 +17,21 @@ public class User {
     private String name;
     private String email;
     private String password;
+    private Role role;
+    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Portfolio> portfolios = new ArrayList<>();
 
 
     //user constructor
     public User() {
     }
 
-
-    //user constructor which takes user name, email and password.
-    public User(String name, String email, String password) {
+    public User(String name, String email, String password, Role role, Portfolio portfolio) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.role = role;
+        this.portfolios.add(portfolio);
     }
 
     //user constructor which takes user email and password.
@@ -47,8 +50,6 @@ public class User {
     public Long getId(){
         return  this.id;
     }
-
-    public void setId(Long id){ this.id = id;}
 
     public String getName() {
         return name;
@@ -74,6 +75,21 @@ public class User {
         this.password = password;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public List<Portfolio> getPortfolios() {
+        return portfolios;
+    }
+
+    public void setPortfolios(List<Portfolio> portfolios) {
+        this.portfolios = portfolios;
+    }
 
     /**
      * Methods
