@@ -91,6 +91,8 @@ public class User {
         this.portfolios = portfolios;
     }
 
+    public void addPortfolio(Portfolio portfolio){ this.portfolios.add(portfolio);}
+
     /**
      * Methods
      * @return
