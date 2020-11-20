@@ -1,6 +1,7 @@
 package com.turntabl.Client_Connectivity.stockrecord.model;
 
 import com.turntabl.Client_Connectivity.auth.model.User;
+import com.turntabl.Client_Connectivity.portfolio.model.Portfolio;
 
 import javax.persistence.*;
 
@@ -14,6 +15,9 @@ public class StockRecord {
     private int quantity;
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Portfolio portfolio;
 
     public StockRecord(String ticker, int quantity, User user) {
         this.ticker = ticker;
@@ -49,6 +53,14 @@ public class StockRecord {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Portfolio getPortfolio() {
+        return portfolio;
+    }
+
+    public void setPortfolio(Portfolio portfolio) {
+        this.portfolio = portfolio;
     }
 
     @Override

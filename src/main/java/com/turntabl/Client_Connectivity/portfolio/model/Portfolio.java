@@ -2,12 +2,10 @@ package com.turntabl.Client_Connectivity.portfolio.model;
 
 import com.turntabl.Client_Connectivity.auth.model.User;
 import com.turntabl.Client_Connectivity.clientorder.model.ClientOrder;
-import com.turntabl.Client_Connectivity.stockrecord.model.StockRecord;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 @Entity
 @Table(name="portfolio")
@@ -19,19 +17,30 @@ public class Portfolio {
     private double initial_amount;
     private double revenue;
     private double amount_spent;
-    private List<Stock> stocks;
+
+    @OneToMany( cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ClientOrder> orders = new ArrayList<>();
+
+    @ElementCollection(targetClass = Product.class)
+    @Enumerated(EnumType.STRING)
+    private List<Product> products = new ArrayList<>();
 
 
-//    @OneToMany( cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<StockRecord> stocks = new ArrayList<>();
-
-
-    public Portfolio(User user, double initial_amount, double revenue, double amount_spent, Stock stock) {
+    public Portfolio(User user, double initial_amount, double revenue, double amount_spent, Product stock) {
         this.user = user;
         this.initial_amount = initial_amount;
         this.revenue = revenue;
         this.amount_spent = amount_spent;
-        this.stocks.add(stock);
+        this.products.add(stock);
+    }
+
+    public Portfolio(User user, double initial_amount, double revenue, double amount_spent, ClientOrder orders, Product product) {
+        this.user = user;
+        this.initial_amount = initial_amount;
+        this.revenue = revenue;
+        this.amount_spent = amount_spent;
+        this.orders.add(orders);
+        this.products.add(product);
     }
 
     public Portfolio(){
@@ -41,11 +50,12 @@ public class Portfolio {
         genStocks();
     }
 
+
     private void genStocks(){
         int st;
         for(int i =0; i < 4; i++){
-            st = 1 + (int) (Math.random() * 9);
-            this.stocks.add(Stock.values()[st]);
+            st = 1 + (int) (Math.random() * 8);
+            this.products.add(Product.values()[st]);
         }
     }
 
@@ -85,15 +95,28 @@ public class Portfolio {
         this.amount_spent = amount_spent;
     }
 
-    public List<Stock> getStocks() {
-        return stocks;
+    public List<ClientOrder> getOrders() {
+        return orders;
     }
 
-    public void setStocks(List<Stock> stocks) {
-        this.stocks = stocks;
+    public void setOrders(List<ClientOrder> orders) {
+        this.orders = orders;
     }
-    public void addStock(Stock stock){
-        this.stocks.add(stock);
+
+    public void addOrder(ClientOrder order){
+        this.orders.add(order);
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
+
+    public void addProduct(Product product){
+        this.products.add(product);
     }
 
     @Override
@@ -104,7 +127,7 @@ public class Portfolio {
                 ", initial_amount=" + initial_amount +
                 ", revenue=" + revenue +
                 ", amount_spent=" + amount_spent +
-                ", stocks=" + stocks +
+                ", stocks=" + products +
                 '}';
     }
 }
