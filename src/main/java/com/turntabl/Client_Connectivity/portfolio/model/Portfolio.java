@@ -19,10 +19,14 @@ public class Portfolio {
     private double initial_amount;
     private double revenue;
     private double amount_spent;
-    @OneToMany( cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<StockRecord> stocks = new ArrayList<>();
+    private List<Stock> stocks;
 
-    public Portfolio(User user, double initial_amount, double revenue, double amount_spent, StockRecord stock) {
+
+//    @OneToMany( cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<StockRecord> stocks = new ArrayList<>();
+
+
+    public Portfolio(User user, double initial_amount, double revenue, double amount_spent, Stock stock) {
         this.user = user;
         this.initial_amount = initial_amount;
         this.revenue = revenue;
@@ -32,8 +36,17 @@ public class Portfolio {
 
     public Portfolio(){
         this.initial_amount = 1000 + (int) (Math.random() * 5000);
-        this.revenue = 0.0;
         this.amount_spent = 0.0;
+        this.revenue = (this.initial_amount - this.amount_spent);
+        genStocks();
+    }
+
+    private void genStocks(){
+        int st;
+        for(int i =0; i < 4; i++){
+            st = 1 + (int) (Math.random() * 9);
+            this.stocks.add(Stock.values()[st]);
+        }
     }
 
     public int getId() {
@@ -72,12 +85,15 @@ public class Portfolio {
         this.amount_spent = amount_spent;
     }
 
-    public List<StockRecord> getStocks() {
+    public List<Stock> getStocks() {
         return stocks;
     }
 
-    public void setStocks(List<StockRecord> stocks) {
+    public void setStocks(List<Stock> stocks) {
         this.stocks = stocks;
+    }
+    public void addStock(Stock stock){
+        this.stocks.add(stock);
     }
 
     @Override
@@ -88,7 +104,7 @@ public class Portfolio {
                 ", initial_amount=" + initial_amount +
                 ", revenue=" + revenue +
                 ", amount_spent=" + amount_spent +
+                ", stocks=" + stocks +
                 '}';
     }
-
 }
