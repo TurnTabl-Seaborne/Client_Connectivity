@@ -7,6 +7,7 @@ import com.turntabl.Client_Connectivity.stockrecord.model.StockRecord;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Entity
 @Table(name="portfolio")
@@ -29,7 +30,11 @@ public class Portfolio {
         this.stocks.add(stock);
     }
 
-    public Portfolio(){}
+    public Portfolio(){
+        this.initial_amount = 1000 + (int) (Math.random() * 5000);
+        this.revenue = 0.0;
+        this.amount_spent = 0.0;
+    }
 
     public int getId() {
         return id;
@@ -85,4 +90,5 @@ public class Portfolio {
                 ", amount_spent=" + amount_spent +
                 '}';
     }
+
 }

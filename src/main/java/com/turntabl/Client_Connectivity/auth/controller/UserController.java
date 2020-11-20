@@ -4,21 +4,21 @@ package com.turntabl.Client_Connectivity.auth.controller;
 //importing necessary libraries
 import com.turntabl.Client_Connectivity.auth.exception.UserNotFoundException;
 import com.turntabl.Client_Connectivity.auth.model.Response;
+import com.turntabl.Client_Connectivity.auth.model.Role;
 import com.turntabl.Client_Connectivity.auth.model.User;
 import com.turntabl.Client_Connectivity.auth.repository.UserRepository;
+import com.turntabl.Client_Connectivity.portfolio.model.Portfolio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
-
-
-
-
+import java.util.Random;
 
 
 //RestController annotation applies to mark UserController class as a request handler.
@@ -29,6 +29,11 @@ public class UserController implements UserDetailsService {
     //declare variable of type userRepository and injecting it implicitly with Autowired annotation.
     @Autowired
     private final UserRepository repository;
+
+
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
 
 
@@ -57,6 +62,13 @@ public class UserController implements UserDetailsService {
     //function that takes user object and returns response of type Response.
     Response newUser(@RequestBody User newUser){
 
+
+        User userToSave = new User();
+
+
+
+
+
         //declare variable of type Response to hold response.
         Response clientRes = new Response();
 
@@ -67,9 +79,18 @@ public class UserController implements UserDetailsService {
 
         if(!exists){
 
+            Portfolio portfolio = new Portfolio();
+
+            userToSave.setName(newUser.getName());
+            userToSave.setPassword(passwordEncoder.encode(newUser.getPassword()));
+            userToSave.setEmail(newUser.getEmail());
+            userToSave.setRole(Role.CLIENT);
+            userToSave.addPortfolio(portfolio);
+
+
             //if user doesn't exit
             //save user details and set name on Response Object.
-            clientRes.setData(repository.save(newUser).getName());
+            clientRes.setData(repository.save(userToSave).getName());
 
             //set status of Response Object.
             clientRes.setStatus("created");
@@ -124,7 +145,7 @@ public class UserController implements UserDetailsService {
 
 
             //check if password provided matches the one in the database.
-            if(user_db.getPassword().matches(user.getPassword())){
+            if(passwordEncoder.matches(user.getPassword(),user_db.getPassword())){
 
                 //if password matches
                 //set status on Response Object.
