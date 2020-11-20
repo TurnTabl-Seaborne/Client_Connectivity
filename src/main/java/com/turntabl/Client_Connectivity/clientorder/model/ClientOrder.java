@@ -12,7 +12,7 @@ public class ClientOrder {
     private int id;
     @ManyToOne(fetch = FetchType.LAZY)
     private Portfolio portfolio;
-    private String ticker;
+    private String product;
     private int quantity;
     private Side side;
     private double price;
@@ -20,9 +20,9 @@ public class ClientOrder {
     private State state;
     private Status status;
 
-    public ClientOrder(Portfolio portfolio, String ticker, int quantity, Side side, double price, String algorithm, State state, Status status) {
+    public ClientOrder(Portfolio portfolio, String product, int quantity, Side side, double price, String algorithm, State state, Status status) {
         this.portfolio = portfolio;
-        this.ticker = ticker;
+        this.product = product;
         this.quantity = quantity;
         this.side = side;
         this.price = price;
@@ -45,12 +45,12 @@ public class ClientOrder {
         this.portfolio = portfolio;
     }
 
-    public String getTicker() {
-        return ticker;
+    public String getProduct() {
+        return product;
     }
 
-    public void setTicker(String ticker) {
-        this.ticker = ticker;
+    public void setProduct(String product) {
+        this.product = product;
     }
 
     public int getQuantity() {
