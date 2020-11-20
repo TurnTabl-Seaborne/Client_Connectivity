@@ -2,6 +2,7 @@ package com.turntabl.Client_Connectivity.portfolio.model;
 
 import com.turntabl.Client_Connectivity.auth.model.User;
 import com.turntabl.Client_Connectivity.clientorder.model.ClientOrder;
+import com.turntabl.Client_Connectivity.stockrecord.model.StockRecord;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -18,14 +19,14 @@ public class Portfolio {
     private double revenue;
     private double amount_spent;
     @OneToMany( cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ClientOrder> orders = new ArrayList<>();
+    private List<StockRecord> stocks = new ArrayList<>();
 
-    public Portfolio(User user, double initial_amount, double revenue, double amount_spent, ClientOrder order) {
+    public Portfolio(User user, double initial_amount, double revenue, double amount_spent, StockRecord stock) {
         this.user = user;
         this.initial_amount = initial_amount;
         this.revenue = revenue;
         this.amount_spent = amount_spent;
-        this.orders.add(order);
+        this.stocks.add(stock);
     }
 
     public Portfolio(){}
@@ -64,6 +65,14 @@ public class Portfolio {
 
     public void setAmount_spent(double amount_spent) {
         this.amount_spent = amount_spent;
+    }
+
+    public List<StockRecord> getStocks() {
+        return stocks;
+    }
+
+    public void setStocks(List<StockRecord> stocks) {
+        this.stocks = stocks;
     }
 
     @Override
