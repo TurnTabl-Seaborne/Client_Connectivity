@@ -53,8 +53,13 @@ public class ClientOrderController {
 
         switch(order_status){
             case("valid"):
+                ExchangeOrder exchangeOrder = new ExchangeOrder();
+
 
                 clientOrder = order.save(orders);
+                exchangeOrder.setOrders(clientOrder.getId());
+
+
                 sendOrderResponse.setData(clientOrder);
                 sendOrderResponse.setStatusCode(HttpStatus.CREATED.value());
                 sendOrderResponse.setMessage("Order Sent");
