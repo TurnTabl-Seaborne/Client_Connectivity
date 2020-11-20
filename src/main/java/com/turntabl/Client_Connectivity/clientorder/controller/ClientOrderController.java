@@ -53,6 +53,7 @@ public class ClientOrderController {
 
         switch(order_status){
             case("valid"):
+
                 clientOrder = order.save(orders);
                 sendOrderResponse.setData(clientOrder);
                 sendOrderResponse.setStatusCode(HttpStatus.CREATED.value());
