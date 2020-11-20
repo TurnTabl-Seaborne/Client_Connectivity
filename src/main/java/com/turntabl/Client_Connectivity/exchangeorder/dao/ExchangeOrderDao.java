@@ -2,6 +2,8 @@ package com.turntabl.Client_Connectivity.exchangeorder.dao;
 
 import com.turntabl.Client_Connectivity.exchangeorder.model.ExchangeOrder;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
