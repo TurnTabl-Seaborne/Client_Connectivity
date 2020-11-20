@@ -37,7 +37,7 @@ public class ExchangeOrderController {
         ExchangeOrder exchangeOrder = exchangeOrders.findAllById(id);
 
         exchangeOrder.setOrderKey(newExchangeOrder.getOrderKey());
-        exchangeOrder.setOrders(newExchangeOrder.getOrders());
+        exchangeOrder.setOrder(newExchangeOrder.getOrder());
 
         return exchangeOrders.save(exchangeOrder);
     }

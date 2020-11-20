@@ -10,12 +10,14 @@ public class ExchangeOrder {
     @Id @GeneratedValue
     private int id;
     private String orderKey;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ClientOrder> orders;
+//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<ClientOrder> orders;
+    @OneToOne(cascade = CascadeType.ALL)
+    private ClientOrder order;
 
     public ExchangeOrder(String orderKey, ClientOrder order) {
         this.orderKey = orderKey;
-        this.orders.add(order);
+        this.order = order;
     }
 
     public ExchangeOrder(){}
@@ -32,12 +34,12 @@ public class ExchangeOrder {
         this.orderKey = orderKey;
     }
 
-    public List<ClientOrder> getOrders() {
-        return orders;
+    public ClientOrder getOrder() {
+        return order;
     }
 
-    public void setOrders(List<ClientOrder> orders) {
-        this.orders = orders;
+    public void setOrder(ClientOrder order) {
+        this.order = order;
     }
 
     @Override
@@ -45,7 +47,7 @@ public class ExchangeOrder {
         return "ExchangeOrder{" +
                 "id=" + id +
                 ", orderKey='" + orderKey + '\'' +
-                ", orders=" + orders +
+                ", order=" + order +
                 '}';
     }
 }
