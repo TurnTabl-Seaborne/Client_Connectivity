@@ -54,7 +54,7 @@ public class Portfolio {
     private void genStocks(){
         int st;
         for(int i =0; i < 4; i++){
-            st = 1 + (int) (Math.random() * 8);
+            st = 1 + (int) (Math.random() * 7);
             this.products.add(Product.values()[st]);
         }
     }
