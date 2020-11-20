@@ -3,9 +3,8 @@ package com.turntabl.Client_Connectivity.clientorder.controller;
 import com.turntabl.Client_Connectivity.clientorder.dao.ClientOrderDao;
 import com.turntabl.Client_Connectivity.clientorder.model.ClientOrder;
 import com.turntabl.Client_Connectivity.clientorder.model.SendOrderResponse;
-import com.turntabl.Client_Connectivity.clientorder.service.WebClientService;
+import com.turntabl.Client_Connectivity.exchangeorder.dao.ExchangeOrderDao;
 import com.turntabl.Client_Connectivity.exchangeorder.model.ExchangeOrder;
-import com.turntabl.Client_Connectivity.stockrecord.model.StockRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,6 +20,9 @@ public class ClientOrderController {
 
     @Autowired
     private final ClientOrderDao order;
+
+    @Autowired
+    private ExchangeOrderDao exchangeOrderDao;
 
     public ClientOrderController(ClientOrderDao order) {
         this.order = order;
@@ -57,8 +59,9 @@ public class ClientOrderController {
 
 
                 clientOrder = order.save(orders);
-                exchangeOrder.setOrders(clientOrder.getId());
+                exchangeOrder.setOrder(clientOrder);
 
+                exchangeOrderDao.save(exchangeOrder);
 
                 sendOrderResponse.setData(clientOrder);
                 sendOrderResponse.setStatusCode(HttpStatus.CREATED.value());
@@ -81,7 +84,7 @@ public class ClientOrderController {
         clientOrder.setPortfolio(newClientOrder.getPortfolio());
         clientOrder.setPrice(newClientOrder.getPrice());
         clientOrder.setQuantity(newClientOrder.getQuantity());
-        clientOrder.setTicker(newClientOrder.getTicker());
+        clientOrder.setProduct(newClientOrder.getProduct());
         clientOrder.setSide(newClientOrder.getSide());
         clientOrder.setStatus(newClientOrder.getStatus());
 
