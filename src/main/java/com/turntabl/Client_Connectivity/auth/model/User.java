@@ -18,8 +18,8 @@ public class User {
     private String email;
     private String password;
     private Role role;
-    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<Portfolio> portfolios = new ArrayList<>();
+    @OneToOne(cascade = CascadeType.ALL,orphanRemoval = true)
+    private Portfolio portfolio;
 
 
     //user constructor
@@ -31,7 +31,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.role = role;
-        this.portfolios.add(portfolio);
+        this.portfolio = portfolio;
     }
 
     //user constructor which takes user email and password.
@@ -83,15 +83,13 @@ public class User {
         this.role = role;
     }
 
-    public List<Portfolio> getPortfolios() {
-        return portfolios;
+    public Portfolio getPortfolio() {
+        return portfolio;
     }
 
-    public void setPortfolios(List<Portfolio> portfolios) {
-        this.portfolios = portfolios;
+    public void setPortfolio(Portfolio portfolio) {
+        this.portfolio = portfolio;
     }
-
-    public void addPortfolio(Portfolio portfolio){ this.portfolios.add(portfolio);}
 
     /**
      * Methods
