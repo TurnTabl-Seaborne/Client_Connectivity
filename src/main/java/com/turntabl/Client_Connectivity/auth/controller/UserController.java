@@ -67,8 +67,6 @@ public class UserController implements UserDetailsService {
 
 
 
-
-
         //declare variable of type Response to hold response.
         Response clientRes = new Response();
 
@@ -85,12 +83,16 @@ public class UserController implements UserDetailsService {
             userToSave.setPassword(passwordEncoder.encode(newUser.getPassword()));
             userToSave.setEmail(newUser.getEmail());
             userToSave.setRole(Role.CLIENT);
-            userToSave.addPortfolio(portfolio);
+            userToSave.setPortfolio(portfolio);
 
+
+            User saved_user = repository.save(userToSave);
+
+            //repository.updatedNewUserPortfolio(saved_user.getId(), saved_user);
 
             //if user doesn't exit
             //save user details and set name on Response Object.
-            clientRes.setData(repository.save(userToSave).getName());
+            clientRes.setData(saved_user.getName());
 
             //set status of Response Object.
             clientRes.setStatus("created");
