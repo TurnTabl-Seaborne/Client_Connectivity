@@ -25,7 +25,7 @@ public class PortfolioController {
 
     @GetMapping("/api/portfolio/{id}")
     Portfolio getAllPortfolio(Integer id){
-        return portfoliodao.findAllById(id);
+        return portfoliodao.findAllByPortfolioId(id);
     }
 
     @PostMapping("/api/portfolio/")

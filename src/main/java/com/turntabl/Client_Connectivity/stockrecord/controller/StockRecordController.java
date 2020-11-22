@@ -26,7 +26,7 @@ public class StockRecordController {
 
     @GetMapping("/api/stocks/{id}")
     StockRecord getAllStock(@PathVariable Integer id){
-        return stocks.findAllById(id);
+        return stocks.findAllByStockRecordId(id);
     }
 
     @PostMapping("/api/stocks")
@@ -37,7 +37,7 @@ public class StockRecordController {
     @PutMapping("/api/stocks/{id}")
     StockRecord updateStock(@PathVariable int id, @RequestBody StockRecord newStockRecord){
 
-        StockRecord stockRecord = stocks.findAllById(id);
+        StockRecord stockRecord = stocks.findAllByStockRecordId(id);
         stockRecord.setQuantity(newStockRecord.getQuantity());
         stockRecord.setTicker(newStockRecord.getTicker());
         stockRecord.setUser(newStockRecord.getUser());

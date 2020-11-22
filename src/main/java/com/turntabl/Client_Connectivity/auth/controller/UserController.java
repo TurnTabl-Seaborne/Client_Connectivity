@@ -3,10 +3,12 @@ package com.turntabl.Client_Connectivity.auth.controller;
 
 //importing necessary libraries
 import com.turntabl.Client_Connectivity.auth.exception.UserNotFoundException;
-import com.turntabl.Client_Connectivity.auth.model.Response;
+import com.turntabl.Client_Connectivity.auth.model.UserData;
+import com.turntabl.Client_Connectivity.auth.model.UserDataResponse;
 import com.turntabl.Client_Connectivity.auth.model.Role;
 import com.turntabl.Client_Connectivity.auth.model.User;
 import com.turntabl.Client_Connectivity.auth.repository.UserRepository;
+import com.turntabl.Client_Connectivity.portfolio.doa.PortfolioDao;
 import com.turntabl.Client_Connectivity.portfolio.model.Portfolio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 
 //RestController annotation applies to mark UserController class as a request handler.
@@ -31,6 +32,10 @@ public class UserController implements UserDetailsService {
     private final UserRepository repository;
 
 
+    @Autowired
+    private final PortfolioDao portfolioDao;
+
+
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -39,8 +44,9 @@ public class UserController implements UserDetailsService {
 
 
    //constructor for UserController class.
-    public UserController(UserRepository userRepository) {
+    public UserController(UserRepository userRepository, PortfolioDao portfolioDao) {
         this.repository = userRepository;
+        this.portfolioDao = portfolioDao;
     }
 
 
@@ -60,15 +66,14 @@ public class UserController implements UserDetailsService {
     //sign up endpoint
     @PostMapping("/api/signup")
     //function that takes user object and returns response of type Response.
-    Response newUser(@RequestBody User newUser){
+    UserDataResponse newUser(@RequestBody User newUser){
+
+        UserData userData = new UserData();
+        UserDataResponse clientRes = new UserDataResponse();
 
 
         User userToSave = new User();
 
-
-
-        //declare variable of type Response to hold response.
-        Response clientRes = new Response();
 
 
         //check if user is already registered on the platform.
@@ -77,22 +82,26 @@ public class UserController implements UserDetailsService {
 
         if(!exists){
 
+            User user = new User();
+            user.setName(newUser.getName());
+            user.setPassword(passwordEncoder.encode(newUser.getPassword()));
+            user.setEmail(newUser.getEmail());
+            user.setRole(Role.CLIENT);
+            user = repository.save(user);
+
+
             Portfolio portfolio = new Portfolio();
-
-            userToSave.setName(newUser.getName());
-            userToSave.setPassword(passwordEncoder.encode(newUser.getPassword()));
-            userToSave.setEmail(newUser.getEmail());
-            userToSave.setRole(Role.CLIENT);
-            userToSave.setPortfolio(portfolio);
+            portfolio.assisgnToUser(user);
+            Portfolio newPortfolio = portfolioDao.save(portfolio);
 
 
-            User saved_user = repository.save(userToSave);
-
-            //repository.updatedNewUserPortfolio(saved_user.getId(), saved_user);
+            userData.setEmail(user.getEmail());
+            userData.setName(user.getName());
+            userData.setUserId(user.getUserId());
 
             //if user doesn't exit
             //save user details and set name on Response Object.
-            clientRes.setData(saved_user.getName());
+            clientRes.setData(userData);
 
             //set status of Response Object.
             clientRes.setStatus("created");
@@ -125,12 +134,12 @@ public class UserController implements UserDetailsService {
     //sign in endpoint
     @PostMapping("/api/signin")
     //function that takes User and returns response of type Response.
-    Response my_user(@RequestBody User user) {
+    UserDataResponse my_user(@RequestBody User user) {
 
 
 
         //declare variable of type Response to hold response.
-        Response clientRes = new Response();
+        UserDataResponse clientRes = new UserDataResponse();
 
 
 
@@ -142,12 +151,18 @@ public class UserController implements UserDetailsService {
 
         if (optUser.isPresent()) {
 
+            UserData userData = new UserData();
+
             //get user from Optional User variable.
             User user_db = optUser.get();
 
 
             //check if password provided matches the one in the database.
             if(passwordEncoder.matches(user.getPassword(),user_db.getPassword())){
+
+                userData.setName(user_db.getName());
+                userData.setEmail(user_db.getEmail());
+                userData.setUserId(user_db.getUserId());
 
                 //if password matches
                 //set status on Response Object.
@@ -157,7 +172,7 @@ public class UserController implements UserDetailsService {
                 clientRes.setCode(HttpStatus.ACCEPTED.value());
 
                 //set data on Response Object.
-                clientRes.setData(user_db.getName());
+                clientRes.setData(userData);
 
 
             }else{

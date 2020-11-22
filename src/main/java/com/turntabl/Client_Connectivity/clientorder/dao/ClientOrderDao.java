@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ClientOrderDao extends JpaRepository<ClientOrder,Integer> {
-    ClientOrder findAllById(Integer id);
+    ClientOrder findAllByClientOrderId(Integer id);
 }

@@ -4,19 +4,29 @@ import com.turntabl.Client_Connectivity.auth.model.User;
 import com.turntabl.Client_Connectivity.portfolio.model.Portfolio;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "stockRecord")
-public class StockRecord {
+public class StockRecord implements Serializable {
     @Id
-    @GeneratedValue
-    private int id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "stock_record_id")
+    private Integer stockRecordId;
+
+    @Column(name = "product")
     private String ticker;
+
+    @Column(name = "quantity")
     private int quantity;
+
+
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "portfolio_id", nullable = false)
     private Portfolio portfolio;
 
     public StockRecord(String ticker, int quantity, User user) {
@@ -27,8 +37,12 @@ public class StockRecord {
 
     public StockRecord(){}
 
-    public int getId() {
-        return id;
+    public int getStockRecordId() {
+        return stockRecordId;
+    }
+
+    public void setStockRecordId(int stockRecordId) {
+        this.stockRecordId = stockRecordId;
     }
 
     public String getTicker() {
@@ -61,15 +75,5 @@ public class StockRecord {
 
     public void setPortfolio(Portfolio portfolio) {
         this.portfolio = portfolio;
-    }
-
-    @Override
-    public String toString() {
-        return "StockRecord{" +
-                "id=" + id +
-                ", ticker='" + ticker +
-                ", quantity=" + quantity +
-                ", user=" + user +
-                '}';
     }
 }

@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface StockRecordDao extends JpaRepository<StockRecord,Integer> {
-    StockRecord findAllById(Integer id);
+    StockRecord findAllByStockRecordId(Integer id);
 }

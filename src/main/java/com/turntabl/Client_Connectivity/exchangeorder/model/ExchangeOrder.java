@@ -1,18 +1,24 @@
 package com.turntabl.Client_Connectivity.exchangeorder.model;
 
+import com.turntabl.Client_Connectivity.auth.model.User;
 import com.turntabl.Client_Connectivity.clientorder.model.ClientOrder;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 @Entity
 @Table(name = "exchangeOrders")
-public class ExchangeOrder {
-    @Id @GeneratedValue
-    private int id;
+public class ExchangeOrder implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "exchange_order_id")
+    private int exchangeOrderId;
+
+    @Column(name = "order_key")
     private String orderKey;
-//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<ClientOrder> orders;
-    @OneToOne(cascade = CascadeType.ALL)
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_order_id", nullable = false)
     private ClientOrder order;
 
     public ExchangeOrder(String orderKey, ClientOrder order) {
@@ -22,8 +28,12 @@ public class ExchangeOrder {
 
     public ExchangeOrder(){}
 
-    public int getId() {
-        return id;
+    public int getExchangeOrderId() {
+        return exchangeOrderId;
+    }
+
+    public void setExchangeOrderId(int exchangeOrderId) {
+        this.exchangeOrderId = exchangeOrderId;
     }
 
     public String getOrderKey() {
@@ -42,12 +52,8 @@ public class ExchangeOrder {
         this.order = order;
     }
 
-    @Override
-    public String toString() {
-        return "ExchangeOrder{" +
-                "id=" + id +
-                ", orderKey='" + orderKey + '\'' +
-                ", order=" + order +
-                '}';
+
+    public void assignToClientOrder(ClientOrder clientOrder){
+        this.order = clientOrder;
     }
 }

@@ -32,7 +32,7 @@ public class ExchangeOrderController {
 
     @GetMapping("/api/exchangeorders/{id}")
     ExchangeOrder getAllExchangeOrdersById(@PathVariable Integer id){
-        return exchangeOrders.findAllById(id);
+        return exchangeOrders.findAllByExchangeOrderId(id);
     }
 
     @PostMapping("/api/exchangeorders")
@@ -47,7 +47,7 @@ public class ExchangeOrderController {
 
     @PutMapping("/api/exchangeorders/{id}")
     ExchangeOrder updateExchangeOrder(@PathVariable Integer id, @RequestBody ExchangeOrder newExchangeOrder){
-        ExchangeOrder exchangeOrder = exchangeOrders.findAllById(id);
+        ExchangeOrder exchangeOrder = exchangeOrders.findAllByExchangeOrderId(id);
 
         exchangeOrder.setOrderKey(newExchangeOrder.getOrderKey());
         exchangeOrder.setOrder(newExchangeOrder.getOrder());

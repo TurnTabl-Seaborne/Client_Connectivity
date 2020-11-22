@@ -2,24 +2,40 @@ package com.turntabl.Client_Connectivity.portfolio.model;
 
 import com.turntabl.Client_Connectivity.auth.model.User;
 import com.turntabl.Client_Connectivity.clientorder.model.ClientOrder;
+import com.turntabl.Client_Connectivity.stockrecord.model.StockRecord;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name="portfolio")
-public class Portfolio {
-    @Id @GeneratedValue
-    private int id;
+public class Portfolio implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "portfolio_id")
+    private Integer portfolioId;
+
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @Column(name = "initial_amount")
     private double initial_amount;
+
+    @Column(name = "revenue")
     private double revenue;
+
+    @Column(name = "amount_spent")
     private double amount_spent;
 
-    @OneToMany( cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "portfolio")
     private List<ClientOrder> orders = new ArrayList<>();
+
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "portfolio")
+    private List<StockRecord> stockRecords = new ArrayList<>();
 
     @ElementCollection(targetClass = Product.class)
     @Enumerated(EnumType.STRING)
@@ -59,12 +75,24 @@ public class Portfolio {
         }
     }
 
-    public int getId() {
-        return id;
+    public Integer getPortfolioId() {
+        return portfolioId;
+    }
+
+    public void setPortfolioId(Integer portfolioId) {
+        this.portfolioId = portfolioId;
     }
 
     public User getUser() {
         return user;
+    }
+
+    public List<StockRecord> getStockRecords() {
+        return stockRecords;
+    }
+
+    public void setStockRecords(List<StockRecord> stockRecords) {
+        this.stockRecords = stockRecords;
     }
 
     public void setUser(User user) {
@@ -103,10 +131,6 @@ public class Portfolio {
         this.orders = orders;
     }
 
-    public void addOrder(ClientOrder order){
-        this.orders.add(order);
-    }
-
     public List<Product> getProducts() {
         return products;
     }
@@ -115,19 +139,12 @@ public class Portfolio {
         this.products = products;
     }
 
-    public void addProduct(Product product){
-        this.products.add(product);
+    public void assisgnToUser(User user){
+        this.user = user;
+        this.user.addPortfolio(this);
     }
 
-    @Override
-    public String toString() {
-        return "Portfolio{" +
-                "id=" + id +
-                ", user=" + user +
-                ", initial_amount=" + initial_amount +
-                ", revenue=" + revenue +
-                ", amount_spent=" + amount_spent +
-                ", stocks=" + products +
-                '}';
+    public void addClientOrder(ClientOrder clientOrder){
+        this.orders.add(clientOrder);
     }
 }

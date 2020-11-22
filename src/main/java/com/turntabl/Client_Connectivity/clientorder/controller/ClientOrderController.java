@@ -4,7 +4,11 @@ import com.turntabl.Client_Connectivity.clientorder.dao.ClientOrderDao;
 import com.turntabl.Client_Connectivity.clientorder.model.ClientOrder;
 import com.turntabl.Client_Connectivity.clientorder.model.SendOrderResponse;
 import com.turntabl.Client_Connectivity.exchangeorder.dao.ExchangeOrderDao;
+import com.turntabl.Client_Connectivity.exchangeorder.model.Data;
 import com.turntabl.Client_Connectivity.exchangeorder.model.ExchangeOrder;
+import com.turntabl.Client_Connectivity.exchangeorder.model.ResponseData;
+import com.turntabl.Client_Connectivity.portfolio.doa.PortfolioDao;
+import com.turntabl.Client_Connectivity.portfolio.model.Portfolio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,8 +28,12 @@ public class ClientOrderController {
     @Autowired
     private ExchangeOrderDao exchangeOrderDao;
 
-    public ClientOrderController(ClientOrderDao order) {
+    @Autowired
+    private final PortfolioDao portfolioDao;
+
+    public ClientOrderController(ClientOrderDao order, PortfolioDao portfolioDao) {
         this.order = order;
+        this.portfolioDao = portfolioDao;
     }
 
     @GetMapping("/api/orders")
@@ -35,10 +43,13 @@ public class ClientOrderController {
 
     @GetMapping("/api/orders/{id}")
     ClientOrder getOrder(@PathVariable Integer id){
-        return order.findAllById(id);
+        return order.findAllByClientOrderId(id);
     }
     @PostMapping("/api/orders")
-    SendOrderResponse createOrder(@RequestBody ClientOrder orders){
+    ResponseData createOrder(@RequestBody ClientOrder orders){
+
+        ResponseData responseData = new ResponseData();
+        Data data = new Data();
 
         ClientOrder clientOrder;
         SendOrderResponse sendOrderResponse = new SendOrderResponse();
@@ -55,7 +66,12 @@ public class ClientOrderController {
 
         switch(order_status){
             case("valid"):
+
                 ExchangeOrder exchangeOrder = new ExchangeOrder();
+
+                Portfolio portfolio = portfolioDao.findAllByPortfolioId(2);
+
+                orders.assignToPortfolio(portfolio);
 
 
                 clientOrder = order.save(orders);
@@ -63,22 +79,27 @@ public class ClientOrderController {
 
                 exchangeOrderDao.save(exchangeOrder);
 
-                sendOrderResponse.setData(clientOrder);
-                sendOrderResponse.setStatusCode(HttpStatus.CREATED.value());
-                sendOrderResponse.setMessage("Order Sent");
+                data.setOrderId(orders.getClientOrderId());
+                data.setUserId(portfolio.getUser().getUserId());
+                data.setPortfolioId(portfolio.getPortfolioId());
+
+                responseData.setData(data);
+                responseData.setMessage("Order sent");
+                responseData.setStatus_code(HttpStatus.CREATED.value());
+
                 break;
             case("invalid"):
-                sendOrderResponse.setStatusCode(HttpStatus.FORBIDDEN.value());
-                sendOrderResponse.setMessage("Invalid Order");
+                responseData.setMessage("Invalid Order");
+                responseData.setStatus_code(HttpStatus.FORBIDDEN.value());
                 break;
         }
 
-        return sendOrderResponse;
+        return responseData;
     }
 
     @PutMapping("/api/orders/{id}")
     ClientOrder updateClientOrder (@PathVariable Integer id, @RequestBody ClientOrder newClientOrder){
-        ClientOrder clientOrder = order.findAllById(id);
+        ClientOrder clientOrder = order.findAllByClientOrderId(id);
 
         clientOrder.setAlgorithm(newClientOrder.getAlgorithm());
         clientOrder.setPortfolio(newClientOrder.getPortfolio());
