@@ -1,10 +1,14 @@
 package com.turntabl.Client_Connectivity.portfolio.controller;
 
+import com.turntabl.Client_Connectivity.auth.model.User;
+import com.turntabl.Client_Connectivity.auth.repository.UserRepository;
 import com.turntabl.Client_Connectivity.portfolio.doa.PortfolioDao;
+import com.turntabl.Client_Connectivity.portfolio.model.CreatePortfolioRequest;
 import com.turntabl.Client_Connectivity.portfolio.model.Portfolio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.sound.sampled.Port;
 import java.util.List;
 import java.util.Optional;
 @RestController
@@ -14,8 +18,13 @@ public class PortfolioController {
     @Autowired
     private final PortfolioDao portfoliodao;
 
-    public PortfolioController(PortfolioDao portfoliodao) {
+
+    @Autowired
+    private final UserRepository userRepository;
+
+    public PortfolioController(PortfolioDao portfoliodao, UserRepository userRepository) {
         this.portfoliodao = portfoliodao;
+        this.userRepository = userRepository;
     }
 
     @GetMapping("/api/portfolio")
@@ -29,7 +38,22 @@ public class PortfolioController {
     }
 
     @PostMapping("/api/portfolio/")
-    Portfolio addNewPortfolio(@RequestBody Portfolio newPortfolio){
+    Portfolio addNewPortfolio(@RequestBody CreatePortfolioRequest createPortfolioRequest){
+
+        User user = new User();
+        Optional<User> userOptional = userRepository.findById(createPortfolioRequest.getUser_id());
+
+        if(userOptional.isPresent()){
+            user = userOptional.get();
+        }
+        
+
+        Portfolio newPortfolio = new Portfolio();
+        newPortfolio.setInitial_amount(createPortfolioRequest.getInitial_amount());
+        newPortfolio.addProduct(createPortfolioRequest.getProduct());
+        newPortfolio.assisgnToUser(user);
+
+
         return portfoliodao.save(newPortfolio);
     }
 

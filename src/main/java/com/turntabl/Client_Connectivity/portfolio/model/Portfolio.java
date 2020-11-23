@@ -42,22 +42,15 @@ public class Portfolio implements Serializable {
     private List<Product> products = new ArrayList<>();
 
 
-    public Portfolio(User user, double initial_amount, double revenue, double amount_spent, Product stock) {
+
+    public Portfolio(User user, double initial_amount, double revenue, double amount_spent, List<Product> products) {
         this.user = user;
         this.initial_amount = initial_amount;
         this.revenue = revenue;
         this.amount_spent = amount_spent;
-        this.products.add(stock);
+        this.products = products;
     }
 
-    public Portfolio(User user, double initial_amount, double revenue, double amount_spent, ClientOrder orders, Product product) {
-        this.user = user;
-        this.initial_amount = initial_amount;
-        this.revenue = revenue;
-        this.amount_spent = amount_spent;
-        this.orders.add(orders);
-        this.products.add(product);
-    }
 
     public Portfolio(){
         this.initial_amount = 1000 + (int) (Math.random() * 5000);
@@ -146,5 +139,9 @@ public class Portfolio implements Serializable {
 
     public void addClientOrder(ClientOrder clientOrder){
         this.orders.add(clientOrder);
+    }
+
+    public void addProduct(Product product){
+        this.products.add(product);
     }
 }
