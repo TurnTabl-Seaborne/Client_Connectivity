@@ -127,6 +127,37 @@ public class UserController implements UserDetailsService {
 
 
 
+    //sign in endpoint
+    @PostMapping("/api/admin")
+    //function that takes User and returns response of type Response.
+    UserDataResponse adminSignIn(@RequestBody User user) {
+
+        UserDataResponse userDataResponse = new UserDataResponse();
+        UserData userData = new UserData();
+
+        User admin = repository.findByEmail(user.getEmail()).get();
+
+
+
+        if(passwordEncoder.matches(user.getPassword(), admin.getPassword())){
+            userData.setUserId(admin.getUserId());
+            userData.setEmail(admin.getEmail());
+            userData.setName(admin.getName());
+
+            userDataResponse.setCode(HttpStatus.OK.value());
+            userDataResponse.setData(userData);
+            userDataResponse.setStatus("success");
+
+        }else{
+            userDataResponse.setCode(HttpStatus.FORBIDDEN.value());
+            userDataResponse.setStatus("invalid email/password");
+        }
+
+        return userDataResponse;
+
+    }
+
+
 
 
 
