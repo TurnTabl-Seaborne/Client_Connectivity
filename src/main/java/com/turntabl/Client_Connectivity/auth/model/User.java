@@ -1,42 +1,60 @@
 package com.turntabl.Client_Connectivity.auth.model;
 
 //importing necessary libraries
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.turntabl.Client_Connectivity.clientorder.model.ClientOrder;
+import com.turntabl.Client_Connectivity.portfolio.model.Portfolio;
+import com.turntabl.Client_Connectivity.stockrecord.model.StockRecord;
 
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
 @Entity
-@Table(name = "\"User\"")
-public class User {
+@Table(name = "\"user\"")
+public class User implements Serializable {
 
     //user class attributes
-    private @Id @GeneratedValue Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "user_id")
+    private Long UserId;
+
+    @Column(name = "name", length = 200)
     private String name;
+
+    @Column(name = "email", length = 200)
     private String email;
+
+    @Column(name = "password", length = 200)
     private String password;
 
+    @Column(name = "role", length = 200)
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
-    //user constructor
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private Set<Portfolio> portfolio = new HashSet<>(0);
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<StockRecord> orders = new ArrayList<>();
+
     public User() {
     }
 
 
-    //user constructor which takes user name, email and password.
-    public User(String name, String email, String password) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
+
+    public List<StockRecord> getOrders() {
+        return orders;
     }
 
-    //user constructor which takes user email and password.
-    public User(String email, String password) {
-        this.email = email;
-        this.password = password;
+    public void setOrders(List<StockRecord> orders) {
+        this.orders = orders;
     }
-
 
     /***
      * Getters and Setters
@@ -44,11 +62,13 @@ public class User {
      */
 
 
-    public Long getId(){
-        return  this.id;
+    public Long getUserId() {
+        return UserId;
     }
 
-    public void setId(Long id){ this.id = id;}
+    public void setUserId(Long userId) {
+        UserId = userId;
+    }
 
     public String getName() {
         return name;
@@ -74,18 +94,23 @@ public class User {
         this.password = password;
     }
 
-
-    /**
-     * Methods
-     * @return
-     */
-    @Override
-    public String toString() {
-        return "{" +
-                "id=" + id +
-                "\nname=" + name +
-                "\nemail=" + email +
-                '}';
+    public Role getRole() {
+        return role;
     }
 
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public Set<Portfolio> getPortfolio() {
+        return portfolio;
+    }
+
+    public void setPortfolio(Set<Portfolio> portfolio) {
+        this.portfolio = portfolio;
+    }
+
+    public void addPortfolio(Portfolio portfolio){
+        this.portfolio.add(portfolio);
+    }
 }

@@ -1,12 +1,12 @@
 package com.turntabl.Client_Connectivity.auth.model;
 
-public class Response {
+public class UserDataResponse {
     private String status;
     private int code;
-    private Object data;
+    private UserData data;
 
 
-    public Response(){
+    public UserDataResponse(){
     }
 
 
@@ -26,11 +26,11 @@ public class Response {
         this.code = code;
     }
 
-    public Object getData() {
+    public UserData getData() {
         return data;
     }
 
-    public void setData(Object data) {
+    public void setData(UserData data) {
         this.data = data;
     }
 }
