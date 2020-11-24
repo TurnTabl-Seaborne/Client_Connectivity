@@ -88,7 +88,7 @@ public class ClientOrderController {
 
                 ExchangeOrder exchangeOrder = new ExchangeOrder();
 
-                Portfolio portfolio = portfolioDao.findAllByPortfolioId(2);
+                Portfolio portfolio = portfolioDao.findByPortfolioId(orders.getPortfolio().getPortfolioId());
 
                 orders.assignToPortfolio(portfolio);
 

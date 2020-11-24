@@ -43,20 +43,18 @@ public class PortfolioController {
                 }).collect(Collectors.toList());
     }
 
-//    @GetMapping("/api/portfolio/{portfolio_id}")
+    @GetMapping("/api/portfolio/{id}")
+    PortfolioResponse getOnePortfolio(@PathVariable Integer id){
 
-    Integer getAllPortfolioById(@PathVariable Integer portfolio_id){
+        PortfolioResponse portfolioResponse = new PortfolioResponse();
+      Portfolio portfolio = portfoliodao.findByPortfolioId(id);
+      portfolioResponse.setUser_id(portfolio.getUser().getUserId());
+      portfolioResponse.setAmount_spent(portfolio.getAmount_spent());
+      portfolioResponse.setInitial_amount(portfolio.getInitial_amount());
+      portfolioResponse.setRevenue(portfolio.getRevenue());
 
-        Portfolio portfolio = portfoliodao.findByPortfolioId(portfolio_id);
-//                 PortfolioResponse response = new PortfolioResponse();
-//                 response.setPortfolio_id(portfolio.getPortfolioId());
-//                 response.setUser_id(portfolio.getUser().getUserId());
-//                 response.setInitial_amount(portfolio.getInitial_amount());
-//                 response.setAmount_spent(portfolio.getAmount_spent());
-//                 response.setRevenue(portfolio.getRevenue());
-//
-                 return portfolio.getPortfolioId();
-//        return  portfolio_id;
+      return portfolioResponse;
+
     }
 
     @GetMapping("/api/portfolio/user/{user_id}")

@@ -9,12 +9,13 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface PortfolioDao extends JpaRepository<Portfolio, Integer> {
-    Portfolio findAllByPortfolioId(Integer id);
 
     @Query("select p from Portfolio p where p.user.UserId = ?1")
    List<Portfolio> findAllByUserId(Long user_id);
+//
+//    @Query("select p from Portfolio p where p.portfolioId= ?1 ")
+//    Portfolio findByPortfolioId(Integer portfolio_id);
 
-    @Query("select p from Portfolio p where p.portfolioId= ?1 ")
-    Portfolio findByPortfolioId(Integer portfolio_id);
+    Portfolio findByPortfolioId(Integer portfolioId);
 }
 
