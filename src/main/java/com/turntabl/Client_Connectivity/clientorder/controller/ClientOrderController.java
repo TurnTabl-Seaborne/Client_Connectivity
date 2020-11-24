@@ -1,8 +1,10 @@
 package com.turntabl.Client_Connectivity.clientorder.controller;
 
+import com.turntabl.Client_Connectivity.auth.repository.UserRepository;
 import com.turntabl.Client_Connectivity.clientorder.dao.ClientOrderDao;
 import com.turntabl.Client_Connectivity.clientorder.model.ClientOrder;
 import com.turntabl.Client_Connectivity.clientorder.model.SendOrderResponse;
+import com.turntabl.Client_Connectivity.clientorder.model.UserOrderResponse;
 import com.turntabl.Client_Connectivity.exchangeorder.dao.ExchangeOrderDao;
 import com.turntabl.Client_Connectivity.exchangeorder.model.Data;
 import com.turntabl.Client_Connectivity.exchangeorder.model.ExchangeOrder;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -31,6 +34,9 @@ public class ClientOrderController {
     @Autowired
     private final PortfolioDao portfolioDao;
 
+    @Autowired
+    private UserRepository userRepository;
+
     public ClientOrderController(ClientOrderDao order, PortfolioDao portfolioDao) {
         this.order = order;
         this.portfolioDao = portfolioDao;
@@ -42,9 +48,22 @@ public class ClientOrderController {
     }
 
     @GetMapping("/api/orders/{id}")
-    ClientOrder getOrder(@PathVariable Integer id){
+    List<ClientOrder> getOrder(@PathVariable Integer id){
         return order.findAllByClientOrderId(id);
     }
+
+    //return a list of all the orders by a user.
+    @GetMapping("/api/orders/user/{user_id}")
+    List<ClientOrder> getOrdersByUserId(@PathVariable Long user_id){
+
+       return order.findAllByUserId(user_id);
+    }
+
+//    @GetMapping("/api/orders/portfolio/{id}")
+//    ClientOrder getOrderByPortfolioId(@PathVariable Integer portfolio_id){
+//        return order.findAllByClientOrderId(portfolio_id);
+//    }
+
     @PostMapping("/api/orders")
     ResponseData createOrder(@RequestBody ClientOrder orders){
 
@@ -99,7 +118,7 @@ public class ClientOrderController {
 
     @PutMapping("/api/orders/{id}")
     ClientOrder updateClientOrder (@PathVariable Integer id, @RequestBody ClientOrder newClientOrder){
-        ClientOrder clientOrder = order.findAllByClientOrderId(id);
+        ClientOrder clientOrder = order.findByClientOrderId(id);
 
         clientOrder.setAlgorithm(newClientOrder.getAlgorithm());
         clientOrder.setPortfolio(newClientOrder.getPortfolio());

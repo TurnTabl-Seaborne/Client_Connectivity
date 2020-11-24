@@ -3,14 +3,15 @@ package com.turntabl.Client_Connectivity.portfolio.controller;
 import com.turntabl.Client_Connectivity.auth.model.User;
 import com.turntabl.Client_Connectivity.auth.repository.UserRepository;
 import com.turntabl.Client_Connectivity.portfolio.doa.PortfolioDao;
-import com.turntabl.Client_Connectivity.portfolio.model.CreatePortfolioRequest;
-import com.turntabl.Client_Connectivity.portfolio.model.Portfolio;
+import com.turntabl.Client_Connectivity.portfolio.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.sound.sampled.Port;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 @RestController
 public class PortfolioController {
 
@@ -28,18 +29,57 @@ public class PortfolioController {
     }
 
     @GetMapping("/api/portfolio")
-    List<Portfolio> getAllPortfolio(){
-        return portfoliodao.findAll();
+    List<PortfolioListResponse> getAllPortfolio(){
+        return portfoliodao.findAll().stream().map(
+                portfolio -> {
+
+                    PortfolioListResponse portfolioListResponse = new PortfolioListResponse();
+                    portfolioListResponse.setPortfolio_id(portfolio.getPortfolioId());
+                    portfolioListResponse.setAmount_spent(portfolio.getAmount_spent());
+                    portfolioListResponse.setInitial_amount(portfolio.getInitial_amount());
+                    portfolioListResponse.setRevenue(portfolio.getRevenue());
+
+                    return portfolioListResponse;
+                }).collect(Collectors.toList());
     }
 
-    @GetMapping("/api/portfolio/{id}")
-    Portfolio getAllPortfolio(Integer id){
-        return portfoliodao.findAllByPortfolioId(id);
+//    @GetMapping("/api/portfolio/{portfolio_id}")
+
+    Integer getAllPortfolioById(@PathVariable Integer portfolio_id){
+
+        Portfolio portfolio = portfoliodao.findByPortfolioId(portfolio_id);
+//                 PortfolioResponse response = new PortfolioResponse();
+//                 response.setPortfolio_id(portfolio.getPortfolioId());
+//                 response.setUser_id(portfolio.getUser().getUserId());
+//                 response.setInitial_amount(portfolio.getInitial_amount());
+//                 response.setAmount_spent(portfolio.getAmount_spent());
+//                 response.setRevenue(portfolio.getRevenue());
+//
+                 return portfolio.getPortfolioId();
+//        return  portfolio_id;
     }
+
+    @GetMapping("/api/portfolio/user/{user_id}")
+    List<PortfolioListResponse> getAllPortfoliosByUserId(@PathVariable Long user_id){
+        PortfolioResponse pResponse = new PortfolioResponse();
+        return  portfoliodao.findAllByUserId(user_id).stream().map(
+                portfolio -> {
+
+                PortfolioListResponse portfolioListResponse = new PortfolioListResponse();
+                    portfolioListResponse.setPortfolio_id(portfolio.getPortfolioId());
+                    portfolioListResponse.setAmount_spent(portfolio.getAmount_spent());
+                    portfolioListResponse.setInitial_amount(portfolio.getInitial_amount());
+                    portfolioListResponse.setRevenue(portfolio.getRevenue());
+
+                    return portfolioListResponse;
+                }).collect(Collectors.toList());
+    }
+
+
 
     @PostMapping("/api/portfolio/")
-    Portfolio addNewPortfolio(@RequestBody CreatePortfolioRequest createPortfolioRequest){
-
+    PortfolioResponse addNewPortfolio(@RequestBody CreatePortfolioRequest createPortfolioRequest){
+        PortfolioResponse portResponse = new PortfolioResponse();
         User user = new User();
         Optional<User> userOptional = userRepository.findById(createPortfolioRequest.getUser_id());
 
@@ -53,8 +93,14 @@ public class PortfolioController {
         newPortfolio.addProduct(createPortfolioRequest.getProduct());
         newPortfolio.assisgnToUser(user);
 
+        newPortfolio = portfoliodao.save(newPortfolio);
+        portResponse.setUser_id(user.getUserId());
+        portResponse.setPortfolio_id(newPortfolio.getPortfolioId());
+        portResponse.setInitial_amount(newPortfolio.getInitial_amount());
+        portResponse.setAmount_spent(newPortfolio.getAmount_spent());
+        portResponse.setRevenue(newPortfolio.getRevenue());
 
-        return portfoliodao.save(newPortfolio);
+        return portResponse;
     }
 
     @DeleteMapping("api/portfolio/{id}")

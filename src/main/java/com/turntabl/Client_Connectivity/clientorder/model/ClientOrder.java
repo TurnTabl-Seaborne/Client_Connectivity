@@ -46,17 +46,14 @@ public class ClientOrder implements Serializable {
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "order")
     private ExchangeOrder exchangeOrder;
 
+    public ClientOrder(){}
 
-
-    public ClientOrder(Portfolio portfolio, String product, int quantity, Side side, double price, String algorithm, State state, Status status) {
-        this.portfolio = portfolio;
+    public ClientOrder(String product, int quantity, Side side, double price, String algorithm) {
         this.product = product;
         this.quantity = quantity;
         this.side = side;
         this.price = price;
         this.algorithm = algorithm;
-        this.state = state;
-        this.status = status;
     }
 
     public int getClientOrderId() {

@@ -2,11 +2,7 @@ package com.turntabl.Client_Connectivity.auth.controller;
 
 
 //importing necessary libraries
-import com.turntabl.Client_Connectivity.auth.exception.UserNotFoundException;
-import com.turntabl.Client_Connectivity.auth.model.UserData;
-import com.turntabl.Client_Connectivity.auth.model.UserDataResponse;
-import com.turntabl.Client_Connectivity.auth.model.Role;
-import com.turntabl.Client_Connectivity.auth.model.User;
+import com.turntabl.Client_Connectivity.auth.model.*;
 import com.turntabl.Client_Connectivity.auth.repository.UserRepository;
 import com.turntabl.Client_Connectivity.portfolio.doa.PortfolioDao;
 import com.turntabl.Client_Connectivity.portfolio.model.Portfolio;
@@ -20,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 //RestController annotation applies to mark UserController class as a request handler.
@@ -55,8 +52,22 @@ public class UserController implements UserDetailsService {
 
    //get all users endpoint
     @GetMapping("/api/users")
-    List<User> allUsers(){
-        return repository.findAll();
+    List<UserResponse> allUsers(){
+        return repository.findAll().stream().map(
+                user -> {
+                    UserResponse userListResponse = new UserResponse();
+                    userListResponse.setUser_id(user.getUserId());
+                    userListResponse.setName(user.getName());
+                    userListResponse.setEmail(user.getEmail());
+                    userListResponse.setPortfolio_id(user.getPortfolio().stream().map(
+                            portfolio -> {
+                                return portfolio.getPortfolioId();
+                            }
+                    ).collect(Collectors.toList()));
+
+                    return userListResponse;
+                }
+        ).collect(Collectors.toList());
     }
 
 
@@ -213,10 +224,20 @@ public class UserController implements UserDetailsService {
     //endpoint for getting user by ID.
     @GetMapping("/api/users/{id}")
     //function that takes user ID of type long and returns User
-    User oneUser(@PathVariable Long id){
+    UserResponse oneUser(@PathVariable Long id){
+        User user = repository.findById(id).get();
 
-        //return user if found else throw user nopt found exception.
-        return  repository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        UserResponse response =  new UserResponse();
+        response.setUser_id(user.getUserId());
+        response.setName(user.getName());
+        response.setEmail(user.getEmail());
+        response.setPortfolio_id(user.getPortfolio().stream().map(
+                portfolio -> {
+                    return portfolio.getPortfolioId();
+                }
+        ).collect(Collectors.toList()));
+
+        return response;
 
 
     }
