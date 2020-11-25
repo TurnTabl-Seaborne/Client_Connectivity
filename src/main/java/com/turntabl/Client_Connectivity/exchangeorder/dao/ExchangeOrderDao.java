@@ -12,12 +12,11 @@ import org.springframework.stereotype.Repository;
 public interface ExchangeOrderDao extends JpaRepository<ExchangeOrder,Integer> {
     ExchangeOrder findAllByExchangeOrderId(Integer id);
 
-    @Query("select e from ExchangeOrder e where e.order.clientOrderId = :client_order_id")
-    ExchangeOrder findByClientOrderId(@Param("client_order_id") int client_order_id);
+    @Query("select e from ExchangeOrder e where e.order.clientOrderId = ?1")
+    ExchangeOrder findByClientOrderId(int client_order_id);
 
     @Modifying(clearAutomatically = true)
-    @Query("update ExchangeOrder e set e.orderKey = :order_key where e.order.clientOrderId = :client_order_id")
-    int updatedExchangeOrderWithOrderKey(@Param("order_key") String order_key, @Param("client_order_id") int client_order_id);
-    
+    @Query("update ExchangeOrder e set e.orderKey = ?1 where e.order.clientOrderId = ?2")
+    int updatedExchangeOrderWithOrderKey(String order_key, int client_order_id);
 
 }
