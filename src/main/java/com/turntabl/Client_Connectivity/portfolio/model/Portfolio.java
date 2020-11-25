@@ -37,7 +37,10 @@ public class Portfolio implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "portfolio")
     private List<StockRecord> stockRecords = new ArrayList<>();
 
+
     @ElementCollection(targetClass = Product.class)
+    @JoinTable(name = "portfolio_products", joinColumns = @JoinColumn(name = "portfolio_portfolio_id"))
+    @Column(name = "products", nullable = false)
     @Enumerated(EnumType.STRING)
     private List<Product> products = new ArrayList<>();
 

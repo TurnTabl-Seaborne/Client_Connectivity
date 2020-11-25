@@ -7,12 +7,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
 
 //class extends spring data jpa to store and retrieve data in a relational database(postgres)
+@Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     //defining findByEmail(String email) method which returns User object as available or not available.
     Optional<User> findByEmail(String email);
