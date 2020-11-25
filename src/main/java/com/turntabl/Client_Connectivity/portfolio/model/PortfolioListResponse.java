@@ -1,10 +1,13 @@
 package com.turntabl.Client_Connectivity.portfolio.model;
 
+import java.util.List;
+
 public class PortfolioListResponse {
     private int portfolio_id;
     private double initial_amount;
     private double amount_spent;
     private double revenue;
+    private List<Product> products;
 
     public  PortfolioListResponse(){}
 
@@ -38,5 +41,13 @@ public class PortfolioListResponse {
 
     public void setRevenue(double revenue) {
         this.revenue = revenue;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 }

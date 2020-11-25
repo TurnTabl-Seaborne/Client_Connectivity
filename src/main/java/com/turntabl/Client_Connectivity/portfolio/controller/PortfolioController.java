@@ -38,6 +38,7 @@ public class PortfolioController {
                     portfolioListResponse.setAmount_spent(portfolio.getAmount_spent());
                     portfolioListResponse.setInitial_amount(portfolio.getInitial_amount());
                     portfolioListResponse.setRevenue(portfolio.getRevenue());
+                    portfolioListResponse.setProducts(portfolio.getProducts());
 
                     return portfolioListResponse;
                 }).collect(Collectors.toList());
@@ -52,6 +53,7 @@ public class PortfolioController {
       portfolioResponse.setAmount_spent(portfolio.getAmount_spent());
       portfolioResponse.setInitial_amount(portfolio.getInitial_amount());
       portfolioResponse.setRevenue(portfolio.getRevenue());
+      portfolioResponse.setProducts(portfolio.getProducts());
 
       return portfolioResponse;
 
@@ -68,6 +70,7 @@ public class PortfolioController {
                     portfolioListResponse.setAmount_spent(portfolio.getAmount_spent());
                     portfolioListResponse.setInitial_amount(portfolio.getInitial_amount());
                     portfolioListResponse.setRevenue(portfolio.getRevenue());
+                    portfolioListResponse.setProducts(portfolio.getProducts());
 
                     return portfolioListResponse;
                 }).collect(Collectors.toList());
@@ -97,6 +100,7 @@ public class PortfolioController {
         portResponse.setInitial_amount(newPortfolio.getInitial_amount());
         portResponse.setAmount_spent(newPortfolio.getAmount_spent());
         portResponse.setRevenue(newPortfolio.getRevenue());
+        portResponse.setProducts(newPortfolio.getProducts());
 
         return portResponse;
     }
