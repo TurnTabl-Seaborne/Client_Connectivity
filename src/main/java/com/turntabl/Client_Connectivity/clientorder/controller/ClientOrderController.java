@@ -3,14 +3,17 @@ package com.turntabl.Client_Connectivity.clientorder.controller;
 import com.turntabl.Client_Connectivity.auth.repository.UserRepository;
 import com.turntabl.Client_Connectivity.clientorder.dao.ClientOrderDao;
 import com.turntabl.Client_Connectivity.clientorder.model.ClientOrder;
+import com.turntabl.Client_Connectivity.clientorder.model.SendOrderRequest;
 import com.turntabl.Client_Connectivity.clientorder.model.SendOrderResponse;
 import com.turntabl.Client_Connectivity.clientorder.model.UserOrderResponse;
 import com.turntabl.Client_Connectivity.exchangeorder.dao.ExchangeOrderDao;
+import com.turntabl.Client_Connectivity.exchangeorder.model.ClientOrderData;
 import com.turntabl.Client_Connectivity.exchangeorder.model.Data;
 import com.turntabl.Client_Connectivity.exchangeorder.model.ExchangeOrder;
 import com.turntabl.Client_Connectivity.exchangeorder.model.ResponseData;
 import com.turntabl.Client_Connectivity.portfolio.doa.PortfolioDao;
 import com.turntabl.Client_Connectivity.portfolio.model.Portfolio;
+import com.turntabl.Client_Connectivity.portfolio.model.PortfolioListResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,6 +24,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class ClientOrderController {
@@ -54,9 +58,23 @@ public class ClientOrderController {
 
     //return a list of all the orders by a user.
     @GetMapping("/api/orders/user/{user_id}")
-    List<ClientOrder> getOrdersByUserId(@PathVariable Long user_id){
+    List<ClientOrderData> getOrdersByUserId(@PathVariable Long user_id){
+       return order.findAllByUserId(user_id)
+               .stream().map(
+                       order -> {
 
-       return order.findAllByUserId(user_id);
+                           ClientOrderData clientOrderData = new ClientOrderData();
+                           clientOrderData.setStatus(order.getStatus().toString());
+                           clientOrderData.setState(order.getState().toString());
+                           clientOrderData.setSide(order.getSide().toString());
+                           clientOrderData.setQuantity(order.getQuantity());
+                           clientOrderData.setProduct(order.getProduct());
+                           clientOrderData.setPrice(order.getPrice());
+                           clientOrderData.setClientOrderId(order.getClientOrderId());
+                           clientOrderData.setAlgorithm(order.getAlgorithm());
+
+                           return clientOrderData;
+                       }).collect(Collectors.toList());
     }
 
 //    @GetMapping("/api/orders/portfolio/{id}")
@@ -65,10 +83,11 @@ public class ClientOrderController {
 //    }
 
     @PostMapping("/api/orders")
-    ResponseData createOrder(@RequestBody ClientOrder orders){
+    ResponseData createOrder(@RequestBody SendOrderRequest orders){
 
         ResponseData responseData = new ResponseData();
         Data data = new Data();
+        ClientOrderData clientOrderData = new ClientOrderData();
 
         ClientOrder clientOrder;
         SendOrderResponse sendOrderResponse = new SendOrderResponse();
@@ -86,19 +105,39 @@ public class ClientOrderController {
         switch(order_status){
             case("valid"):
 
+                ClientOrder clientOrder1 = new ClientOrder();
+
                 ExchangeOrder exchangeOrder = new ExchangeOrder();
 
-                Portfolio portfolio = portfolioDao.findByPortfolioId(orders.getPortfolio().getPortfolioId());
+                Portfolio portfolio = portfolioDao.findByPortfolioId(orders.getPortfolio_Id());
 
-                orders.assignToPortfolio(portfolio);
+                clientOrder1.setStatus(orders.getStatus());
+                clientOrder1.setState(orders.getState());
+                clientOrder1.setSide(orders.getSide());
+                clientOrder1.setQuantity(orders.getQuantity());
+                clientOrder1.setProduct(orders.getProduct());
+                clientOrder1.setAlgorithm(orders.getAlgorithm());
+                clientOrder1.setPrice(orders.getPrice());
 
 
-                clientOrder = order.save(orders);
+                clientOrder1.assignToPortfolio(portfolio);
+
+
+                clientOrder = order.save(clientOrder1);
                 exchangeOrder.setOrder(clientOrder);
 
                 exchangeOrderDao.save(exchangeOrder);
 
-                data.setOrderId(orders.getClientOrderId());
+                clientOrderData.setStatus(clientOrder.getStatus().toString());
+                clientOrderData.setState(clientOrder.getState().toString());
+                clientOrderData.setSide(clientOrder.getSide().toString());
+                clientOrderData.setQuantity(clientOrder.getQuantity());
+                clientOrderData.setProduct(clientOrder.getProduct());
+                clientOrderData.setPrice(clientOrder.getPrice());
+                clientOrderData.setClientOrderId(clientOrder.getClientOrderId());
+                clientOrderData.setAlgorithm(clientOrder.getAlgorithm());
+
+                data.setClientOrder(clientOrderData);
                 data.setUserId(portfolio.getUser().getUserId());
                 data.setPortfolioId(portfolio.getPortfolioId());
 

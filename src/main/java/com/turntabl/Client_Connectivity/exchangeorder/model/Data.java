@@ -1,9 +1,11 @@
 package com.turntabl.Client_Connectivity.exchangeorder.model;
 
+import com.turntabl.Client_Connectivity.clientorder.model.ClientOrder;
+
 public class Data {
     private Long userId;
     private int portfolioId;
-    private int orderId;
+    private ClientOrderData clientOrder;
 
     public Data() {
 
@@ -25,11 +27,11 @@ public class Data {
         this.portfolioId = portfolioId;
     }
 
-    public int getOrderId() {
-        return orderId;
+    public ClientOrderData getClientOrder() {
+        return clientOrder;
     }
 
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
+    public void setClientOrder(ClientOrderData clientOrder) {
+        this.clientOrder = clientOrder;
     }
 }
