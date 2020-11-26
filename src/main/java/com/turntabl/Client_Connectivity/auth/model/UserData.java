@@ -5,6 +5,7 @@ public class UserData {
     private Long userId;
     private String name;
     private String email;
+    private String role;
 
     public UserData() {
     }
@@ -27,6 +28,14 @@ public class UserData {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public void setEmail(String email) {

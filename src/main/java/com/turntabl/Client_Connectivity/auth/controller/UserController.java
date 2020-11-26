@@ -109,6 +109,7 @@ public class UserController implements UserDetailsService {
             userData.setEmail(user.getEmail());
             userData.setName(user.getName());
             userData.setUserId(user.getUserId());
+            userData.setRole(user.getRole().toString());
 
             //if user doesn't exit
             //save user details and set name on Response Object.
@@ -205,6 +206,7 @@ public class UserController implements UserDetailsService {
                 userData.setName(user_db.getName());
                 userData.setEmail(user_db.getEmail());
                 userData.setUserId(user_db.getUserId());
+                userData.setRole(user_db.getRole().toString());
 
                 //if password matches
                 //set status on Response Object.
