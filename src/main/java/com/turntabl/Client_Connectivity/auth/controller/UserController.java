@@ -59,6 +59,7 @@ public class UserController implements UserDetailsService {
                     userListResponse.setUser_id(user.getUserId());
                     userListResponse.setName(user.getName());
                     userListResponse.setEmail(user.getEmail());
+                    userListResponse.setRole(user.getRole().toString());
                     userListResponse.setPortfolio_id(user.getPortfolio().stream().map(
                             portfolio -> {
                                 return portfolio.getPortfolioId();
