@@ -12,6 +12,7 @@ public class UserResponse {
     private long user_id;
     private String name;
     private String email;
+    private String role;
 
     private List<Integer> portfolio_id;
 
@@ -32,6 +33,14 @@ public class UserResponse {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getEmail() {
