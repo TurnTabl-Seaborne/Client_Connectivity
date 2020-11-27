@@ -41,8 +41,23 @@ public class ExchangeOrderController {
     }
 
     @PostMapping("/api/exchangeorder")
-    void updateExchangeOrder(@RequestBody ExchangeOrderResponse response){
-       exchangeOrders.updatedExchangeOrderWithOrderKey(response.getOrder_key(), response.getClient_order_id());
+    ExchangeOrderResponse updateExchangeOrder(@RequestBody ExchangeOrderResponse response){
+
+        ExchangeOrderResponse exchangeOrderResponse = new ExchangeOrderResponse();
+
+       ExchangeOrder exchangeOrder = exchangeOrders.findByClientOrderId(response.getClient_order_id());
+
+       exchangeOrder.setOrderKey(response.getOrder_key());
+
+        ExchangeOrder saved_exchange_order = exchangeOrders.save(exchangeOrder);
+
+        exchangeOrderResponse.setClient_order_id(saved_exchange_order.getOrder().getClientOrderId());
+        exchangeOrderResponse.setOrder_key(saved_exchange_order.getOrderKey());
+
+        return exchangeOrderResponse;
+
+
+      //return exchangeOrders.updatedExchangeOrderWithOrderKey(response.getOrder_key(), response.getClient_order_id());
     }
 
     @PutMapping("/api/exchangeorders/{id}")

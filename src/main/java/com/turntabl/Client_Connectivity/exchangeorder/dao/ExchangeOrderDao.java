@@ -15,8 +15,9 @@ public interface ExchangeOrderDao extends JpaRepository<ExchangeOrder,Integer> {
     @Query("select e from ExchangeOrder e where e.order.clientOrderId = ?1")
     ExchangeOrder findByClientOrderId(int client_order_id);
 
+
     @Modifying(clearAutomatically = true)
     @Query("update ExchangeOrder e set e.orderKey = ?1 where e.order.clientOrderId = ?2")
-    void updatedExchangeOrderWithOrderKey(String order_key, int client_order_id);
+    int updatedExchangeOrderWithOrderKey(String order_key, int client_order_id);
 
 }
