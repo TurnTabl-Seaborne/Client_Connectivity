@@ -8,6 +8,9 @@ public class PortfolioListResponse {
     private double amount_spent;
     private double revenue;
     private List<Product> products;
+    
+    private double price;
+    private double quantity;
 
     public  PortfolioListResponse(){}
 
