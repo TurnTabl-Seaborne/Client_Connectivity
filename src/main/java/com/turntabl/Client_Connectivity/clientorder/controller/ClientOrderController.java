@@ -89,7 +89,7 @@ public class ClientOrderController {
         ClientOrder clientOrder;
         SendOrderResponse sendOrderResponse = new SendOrderResponse();
 
-        WebClient webClient = WebClient.create("http://localhost:8081");
+        WebClient webClient = WebClient.create("https://seaborne-soap-consumer.herokuapp.com");
 
         String order_status = webClient.post()
                 .uri("/api/soap_consumer/sendOrder")
