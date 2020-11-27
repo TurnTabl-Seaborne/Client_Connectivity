@@ -7,8 +7,6 @@ public class SendOrderRequest {
     private Side side;
     private double price;
     private String algorithm;
-    private Status status;
-    private State state;
 
     public SendOrderRequest() {
     }
@@ -61,19 +59,4 @@ public class SendOrderRequest {
         this.algorithm = algorithm;
     }
 
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public State getState() {
-        return state;
-    }
-
-    public void setState(State state) {
-        this.state = state;
-    }
 }

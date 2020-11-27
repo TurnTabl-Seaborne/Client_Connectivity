@@ -41,8 +41,8 @@ public class ExchangeOrderController {
     }
 
     @PostMapping("/api/exchangeorder")
-    int updateExchangeOrder(@RequestBody ExchangeOrderResponse response){
-       return exchangeOrders.updatedExchangeOrderWithOrderKey(response.getOrder_key(), response.getClient_order_id());
+    void updateExchangeOrder(@RequestBody ExchangeOrderResponse response){
+       exchangeOrders.updatedExchangeOrderWithOrderKey(response.getOrder_key(), response.getClient_order_id());
     }
 
     @PutMapping("/api/exchangeorders/{id}")

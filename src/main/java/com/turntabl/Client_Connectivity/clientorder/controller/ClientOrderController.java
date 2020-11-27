@@ -2,10 +2,7 @@ package com.turntabl.Client_Connectivity.clientorder.controller;
 
 import com.turntabl.Client_Connectivity.auth.repository.UserRepository;
 import com.turntabl.Client_Connectivity.clientorder.dao.ClientOrderDao;
-import com.turntabl.Client_Connectivity.clientorder.model.ClientOrder;
-import com.turntabl.Client_Connectivity.clientorder.model.SendOrderRequest;
-import com.turntabl.Client_Connectivity.clientorder.model.SendOrderResponse;
-import com.turntabl.Client_Connectivity.clientorder.model.UserOrderResponse;
+import com.turntabl.Client_Connectivity.clientorder.model.*;
 import com.turntabl.Client_Connectivity.exchangeorder.dao.ExchangeOrderDao;
 import com.turntabl.Client_Connectivity.exchangeorder.model.ClientOrderData;
 import com.turntabl.Client_Connectivity.exchangeorder.model.Data;
@@ -92,7 +89,7 @@ public class ClientOrderController {
         ClientOrder clientOrder;
         SendOrderResponse sendOrderResponse = new SendOrderResponse();
 
-        WebClient webClient = WebClient.create("https://seaborne-soap-consumer.herokuapp.com");
+        WebClient webClient = WebClient.create("http://localhost:8081");
 
         String order_status = webClient.post()
                 .uri("/api/soap_consumer/sendOrder")
@@ -111,8 +108,8 @@ public class ClientOrderController {
 
                 Portfolio portfolio = portfolioDao.findByPortfolioId(orders.getPortfolio_Id());
 
-                clientOrder1.setStatus(orders.getStatus());
-                clientOrder1.setState(orders.getState());
+                clientOrder1.setStatus(Status.OPEN);
+                clientOrder1.setState(State.PENDING);
                 clientOrder1.setSide(orders.getSide());
                 clientOrder1.setQuantity(orders.getQuantity());
                 clientOrder1.setProduct(orders.getProduct());
