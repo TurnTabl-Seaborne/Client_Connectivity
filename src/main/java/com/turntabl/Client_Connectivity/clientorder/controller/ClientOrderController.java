@@ -44,13 +44,41 @@ public class ClientOrderController {
     }
 
     @GetMapping("/api/orders")
-    List<ClientOrder> getAllOrders(){
-        return order.findAll();
+    List<ClientOrderData> getAllOrders(){
+        return order.findAll().stream().map(
+                order -> {
+
+                    ClientOrderData clientOrderData = new ClientOrderData();
+                    clientOrderData.setStatus(order.getStatus().toString());
+                    clientOrderData.setState(order.getState().toString());
+                    clientOrderData.setSide(order.getSide().toString());
+                    clientOrderData.setQuantity(order.getQuantity());
+                    clientOrderData.setProduct(order.getProduct());
+                    clientOrderData.setPrice(order.getPrice());
+                    clientOrderData.setClientOrderId(order.getClientOrderId());
+                    clientOrderData.setAlgorithm(order.getAlgorithm());
+
+                    return clientOrderData;
+                }).collect(Collectors.toList());
     }
 
     @GetMapping("/api/orders/{id}")
-    List<ClientOrder> getOrder(@PathVariable Integer id){
-        return order.findAllByClientOrderId(id);
+    List<ClientOrderData> getOrder(@PathVariable Integer id){
+        return order.findAllByClientOrderId(id).stream().map(
+                order -> {
+
+                    ClientOrderData clientOrderData = new ClientOrderData();
+                    clientOrderData.setStatus(order.getStatus().toString());
+                    clientOrderData.setState(order.getState().toString());
+                    clientOrderData.setSide(order.getSide().toString());
+                    clientOrderData.setQuantity(order.getQuantity());
+                    clientOrderData.setProduct(order.getProduct());
+                    clientOrderData.setPrice(order.getPrice());
+                    clientOrderData.setClientOrderId(order.getClientOrderId());
+                    clientOrderData.setAlgorithm(order.getAlgorithm());
+
+                    return clientOrderData;
+                }).collect(Collectors.toList());
     }
 
     //return a list of all the orders by a user.
