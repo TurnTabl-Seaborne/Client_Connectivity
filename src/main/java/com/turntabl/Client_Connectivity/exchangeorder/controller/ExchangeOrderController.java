@@ -45,14 +45,14 @@ public class ExchangeOrderController {
 
         ExchangeOrderResponse exchangeOrderResponse = new ExchangeOrderResponse();
 
-       ExchangeOrder exchangeOrder = exchangeOrders.findByClientOrderId(response.getClient_order_id());
+       ExchangeOrder exchangeOrder = exchangeOrders.findByClientOrderId((int)response.getClientOrderId());
 
-       exchangeOrder.setOrderKey(response.getOrder_key());
+       exchangeOrder.setOrderKey(response.getKey());
 
         ExchangeOrder saved_exchange_order = exchangeOrders.save(exchangeOrder);
 
-        exchangeOrderResponse.setClient_order_id(saved_exchange_order.getOrder().getClientOrderId());
-        exchangeOrderResponse.setOrder_key(saved_exchange_order.getOrderKey());
+        exchangeOrderResponse.setClientOrderId(saved_exchange_order.getOrder().getClientOrderId());
+        exchangeOrderResponse.setKey(saved_exchange_order.getOrderKey());
 
         return exchangeOrderResponse;
 
